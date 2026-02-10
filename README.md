@@ -148,6 +148,7 @@ your-project/
 ├── .serena/                         # 💾 Session Coordination
 │   ├── active_plan.md               # Ephemeral agent whiteboard
 │   ├── architectural_decisions.md   # Immutable ADR log
+│   ├── memories/                    # Persistent agent memory
 │   └── task-board.md                # Shared agent handoffs
 │
 ├── .context/                        # 🎯 Grounding Layer
