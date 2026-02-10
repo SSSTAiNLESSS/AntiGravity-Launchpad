@@ -1,0 +1,3 @@
+# Ignore session state, commit architectural decisions
+*.session.md
+*.tmp

@@ -1,0 +1,44 @@
+# Quick Workflow
+# Fast path for small tasks that don't need full planning
+# Inspired by /gsd:quick
+
+name: quick
+description: "Ad-hoc tasks: bug fixes, config changes, small features — GSD guarantees without full ceremony"
+
+trigger: "/gsd:quick or tasks estimated < 30 minutes"
+
+workflow:
+  - name: capture
+    action: "Ask: What do you want to do?"
+    output: "task_description"
+
+  - name: plan_light
+    action: "Generate single XML task plan (no research, no plan checker)"
+    agent: pm-agent
+    output: ".planning/quick/{NNN}-{slug}/PLAN.md"
+
+  - name: execute
+    action: "Execute the plan"
+    agent: best_match  # Routes to frontend/backend/mobile based on task
+    per_task:
+      context: fresh
+      git_commit: atomic
+    output: ".planning/quick/{NNN}-{slug}/SUMMARY.md"
+
+  - name: verify_light
+    action: "Run relevant tests only (not full suite)"
+    agent: qa-agent
+
+constraints:
+  - "No research phase"
+  - "No plan verification agent"
+  - "No user discussion phase"
+  - "Still gets: atomic commits, state tracking, XML task format"
+  - "Tracked separately in .planning/quick/"
+
+use_for:
+  - Bug fixes
+  - Config changes
+  - Small features (< 3 files)
+  - One-off tasks
+  - Documentation updates

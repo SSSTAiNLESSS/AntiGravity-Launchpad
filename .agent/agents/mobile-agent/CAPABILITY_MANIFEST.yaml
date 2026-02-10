@@ -1,0 +1,27 @@
+# Mobile Agent — Capability Manifest
+
+name: mobile-agent
+version: "1.0"
+description: Mobile specialist for Flutter cross-platform development
+
+capabilities:
+  - id: flutter_development
+    inputs: [feature_spec, design_tokens]
+    outputs: [flutter_widgets, platform_channels]
+
+  - id: store_preparation
+    inputs: [app_metadata]
+    outputs: [screenshots, store_descriptions, privacy_policy]
+
+constraints:
+  - "Must NOT modify backend or web frontend code"
+  - "Must support both iOS and Android"
+
+dependencies:
+  tools: [filesystem]
+  agents: [pm-agent]
+  resources: [".agent/.shared/design-system/"]
+
+resource_estimates:
+  typical_task_tokens: 18000
+  max_context_needed: 35000

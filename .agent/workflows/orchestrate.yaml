@@ -1,0 +1,21 @@
+# Orchestrate Workflow
+# Parallel agent execution for independent tasks
+
+name: orchestrate
+description: "Spawn multiple agents in parallel for independent workstreams"
+
+execution_model: parallel
+
+task_distribution:
+  strategy: capability_match
+  fallback: round_robin
+
+coordination:
+  shared_state: .serena/task-board.md
+  conflict_resolution: timestamp_latest_wins
+  sync_interval: "5m"
+
+constraints:
+  - "Parallel agents must NOT modify the same files"
+  - "Shared state updates must be atomic"
+  - "Each agent logs progress to task-board.md"

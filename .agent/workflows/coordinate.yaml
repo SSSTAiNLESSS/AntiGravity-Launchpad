@@ -1,0 +1,78 @@
+# Coordinate Workflow (GSD-Enhanced)
+# Sequential handoff: Discuss → Plan → Execute → Verify
+# Hybridizes Antigravity agent orchestration with GSD context engineering
+
+name: coordinate
+description: "Discuss → Plan → Execute → Verify — the core development pipeline"
+
+phases:
+  - name: discuss
+    description: "Shape implementation before planning — captures preferences and constraints"
+    agent: pm-agent
+    actions:
+      - "Analyze the feature request and identify gray areas"
+      - "Ask domain-specific questions based on feature type:"
+      - "  Visual features → Layout, density, interactions, empty states"
+      - "  APIs/CLIs → Response format, error handling, verbosity"
+      - "  Data features → Schema, validation, edge cases"
+      - "  Organization → Grouping criteria, naming, exceptions"
+      - "Ask until user is satisfied"
+    outputs: ["{phase}-CONTEXT.md"]
+    gate: user_satisfied
+    artifact_location: ".planning/"
+
+  - name: plan
+    description: "Research codebase and generate atomic XML-structured task plans"
+    agents: [architect-agent, pm-agent, qa-agent]
+    steps:
+      - agent: architect-agent
+        action: "Map relevant codebase areas (brownfield only)"
+        output: "CODEBASE_MAP.md"
+      - agent: pm-agent
+        action: "Research and create 2-3 atomic task plans using XML format"
+        output: "{phase}-{N}-PLAN.md"
+      - agent: qa-agent
+        action: "Verify plans against requirements — loop until pass"
+        output: "plan_verification_report"
+    outputs: ["{phase}-RESEARCH.md", "{phase}-{N}-PLAN.md"]
+    gate: human_approval
+
+  - name: execute
+    description: "Run plans in waves — parallel where possible, sequential when dependent"
+    agents: [frontend-agent, backend-agent]
+    mode: parallel_waves
+    per_task:
+      context: fresh                # Fresh context per task — prevents context rot
+      git_commit: atomic            # One commit per task — clean git bisect
+      commit_format: "conventional" # feat(phase): description
+    inputs_from: [discuss, plan]
+    outputs: ["{phase}-{N}-SUMMARY.md"]
+    gate: automated_tests
+
+  - name: verify
+    description: "Automated + manual verification of deliverables"
+    agent: qa-agent
+    steps:
+      - "Extract testable deliverables from plan"
+      - "Run automated checks: tests, security scan, coverage, performance"
+      - "Walk user through manual verification of each deliverable"
+      - "If issues found: spawn debug agent, create fix plans"
+    outputs: ["{phase}-VERIFICATION.md", "{phase}-UAT.md"]
+    on_failure:
+      action: "Create fix plans → re-execute"
+      agent: debug-agent
+    gate: human_signoff
+
+# XML Task Format (used in plan phase)
+# Each task in {phase}-{N}-PLAN.md follows this structure:
+#
+# <task type="auto">
+#   <name>Create login endpoint</name>
+#   <files>src/app/api/auth/login/route.ts</files>
+#   <action>
+#     Use jose for JWT. Validate credentials against users table.
+#     Return httpOnly cookie on success.
+#   </action>
+#   <verify>curl -X POST localhost:3000/api/auth/login returns 200 + Set-Cookie</verify>
+#   <done>Valid credentials return cookie, invalid return 401</done>
+# </task>

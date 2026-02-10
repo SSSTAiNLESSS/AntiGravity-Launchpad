@@ -1,0 +1,40 @@
+# PM Agent — Capability Manifest
+
+name: pm-agent
+version: "1.0"
+description: Product Manager Agent for requirements analysis and planning
+
+capabilities:
+  - id: requirements_analysis
+    description: Decompose user requests into structured requirements
+    inputs: [user_request, codebase_context]
+    outputs: [feature_specification]
+
+  - id: api_contract_design
+    description: Define API interfaces in OpenAPI 3.0 format
+    inputs: [feature_specification, existing_contracts]
+    outputs: [api_contract]
+
+  - id: implementation_planning
+    description: Create sequenced task plans with dependencies and risks
+    inputs: [feature_specification, api_contracts, codebase_analysis]
+    outputs: [implementation_plan, adr_entries]
+
+  - id: risk_assessment
+    description: Identify technical risks and propose mitigations
+    inputs: [implementation_plan]
+    outputs: [risk_report]
+
+constraints:
+  - "Must NOT write implementation code"
+  - "Must NOT bypass human approval gates"
+  - "Must record all significant decisions as ADRs"
+
+dependencies:
+  tools: [filesystem, git, linear]
+  agents: []
+  resources: [".context/tech_stack.md", ".agent/.shared/api-contracts/"]
+
+resource_estimates:
+  typical_task_tokens: 15000
+  max_context_needed: 50000

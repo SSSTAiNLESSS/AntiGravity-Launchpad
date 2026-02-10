@@ -1,0 +1,46 @@
+# User Preferences
+# Customize agent behavior to your workflow
+
+# Agent-model assignments
+model_routing:
+  pm-agent: "gemini-2.5-pro"
+  frontend-agent: "gemini-2.5-pro"
+  backend-agent: "gemini-2.5-pro"
+  qa-agent: "gemini-2.5-pro"
+  debug-agent: "gemini-2.5-pro"
+  mobile-agent: "gemini-2.5-pro"
+
+# Auto-approval tiers
+auto_approval:
+  safe_operations:
+    - file_read
+    - directory_list
+    - git_status
+    - test_run_read_only
+  logged_operations:
+    - file_write_existing
+    - git_commit
+    - dependency_install_dev
+  approval_required:
+    - file_write_new
+    - git_push_protected
+    - database_migration
+    - production_deploy
+  prohibited:
+    - production_database_write
+    - secret_modification
+    - infrastructure_destructive
+
+# CLI aliases (for oh-my-ag)
+aliases:
+  plan: "agent:spawn pm-agent"
+  build: "agent:spawn backend-agent"
+  ui: "agent:spawn frontend-agent"
+  test: "agent:spawn qa-agent"
+  debug: "agent:spawn debug-agent"
+
+# Output preferences
+output:
+  verbose_reasoning: true
+  show_token_usage: false
+  auto_save_sessions: true

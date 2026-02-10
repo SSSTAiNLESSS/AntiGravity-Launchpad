@@ -1,0 +1,98 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "."
+      ],
+      "description": "Local filesystem access (read/write/search)"
+    },
+    "git": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-git"
+      ],
+      "description": "Git operations (status, diff, log, commit)"
+    },
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--access-token",
+        "${SUPABASE_SERVICE_ROLE_KEY}"
+      ],
+      "description": "Supabase management (database, auth, storage)"
+    },
+    "postgresql": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgresql",
+        "${DATABASE_URL}"
+      ],
+      "env": {
+        "MCP_POSTGRESQL_READONLY_DEFAULT": "true"
+      },
+      "description": "Direct PostgreSQL access (read-only by default)"
+    },
+    "github": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "ghcr.io/github/github-mcp-server"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      },
+      "description": "GitHub API (issues, PRs, repos)"
+    },
+    "linear": {
+      "url": "https://mcp.linear.app/sse",
+      "env": {
+        "LINEAR_API_KEY": "${LINEAR_API_KEY}"
+      },
+      "description": "Linear issue tracking"
+    },
+    "snyk": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-snyk"
+      ],
+      "env": {
+        "SNYK_TOKEN": "${SNYK_TOKEN}"
+      },
+      "description": "Snyk vulnerability intelligence"
+    },
+    "openmemory": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@openmemory/mcp-server"
+      ],
+      "env": {
+        "OPENMEMORY_API_KEY": "${OPENMEMORY_API_KEY}"
+      },
+      "description": "Long-term cross-project memory — stores facts, preferences, and lessons learned"
+    },
+    "stitch": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic/stitch-mcp-server"
+      ],
+      "env": {
+        "STITCH_API_KEY": "${STITCH_API_KEY}"
+      },
+      "description": "Google Stitch design tool — extract design tokens, generate screens, design-to-code pipeline"
+    }
+  }
+}

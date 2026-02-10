@@ -1,0 +1,44 @@
+# Map Codebase Workflow
+# Brownfield analysis — run before adding features to existing projects
+# Inspired by /gsd:map-codebase
+
+name: map-codebase
+description: "Parallel codebase analysis: stack, architecture, conventions, concerns"
+
+trigger: "/gsd:map-codebase or first feature on existing project"
+
+workflow:
+  - name: spawn_analyzers
+    mode: parallel
+    agents:
+      - name: stack_detector
+        action: "Identify languages, frameworks, runtimes, package managers"
+        tools: [read package.json, requirements.txt, pyproject.toml, Cargo.toml, go.mod]
+        output: "stack_report"
+
+      - name: architecture_mapper
+        action: "Map directory structure, module boundaries, dependency graph"
+        tools: [tree, find, grep for imports]
+        output: "architecture_report"
+
+      - name: convention_discoverer
+        action: "Analyze naming patterns, file organization, coding style"
+        tools: [read sample files, check linter configs, git log for commit style]
+        output: "convention_report"
+
+      - name: concern_identifier
+        action: "Flag tech debt, security issues, missing tests, anti-patterns"
+        tools: [grep for TODO/FIXME/HACK, check test coverage, dependency audit]
+        output: "concern_report"
+
+  - name: synthesize
+    agent: architect-agent
+    action: "Combine all reports into unified codebase map"
+    outputs:
+      - ".planning/research/CODEBASE_MAP.md"
+      - ".context/tech_stack.md (update if empty)"
+      - ".context/coding_standards.md (update if empty)"
+
+  - name: present
+    action: "Present findings to user for review"
+    gate: human_acknowledgement

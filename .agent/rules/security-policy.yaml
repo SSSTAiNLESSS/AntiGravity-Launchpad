@@ -1,0 +1,37 @@
+# Security Policy
+# Governance rules for all agent operations
+
+secret_detection:
+  enabled: true
+  patterns:
+    - "(?i)(api[_-]?key|secret|password|token|credential)"
+    - "(?i)(aws|gcp|azure).*['\"][A-Za-z0-9/+=]{20,}['\"]"
+    - "(?i)Bearer\\s+[A-Za-z0-9\\-._~+/]+=*"
+  action: block_commit
+  notification: immediate
+
+input_validation:
+  sql_injection: parameterized_queries_only
+  xss: sanitize_all_user_input
+  csrf: token_required_for_mutations
+
+access_control:
+  principle: least_privilege
+  mcp_default: read_only
+  production_access: explicit_approval_required
+
+dependency_security:
+  vulnerability_threshold: high
+  auto_update: patch_only
+  license_allowlist:
+    - MIT
+    - Apache-2.0
+    - BSD-2-Clause
+    - BSD-3-Clause
+    - ISC
+
+audit_logging:
+  enabled: true
+  format: json
+  retention: 90_days
+  tamper_detection: sha256_chain

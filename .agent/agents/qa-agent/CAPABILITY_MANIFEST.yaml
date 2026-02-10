@@ -1,0 +1,35 @@
+# QA Agent — Capability Manifest
+
+name: qa-agent
+version: "1.0"
+description: Quality Assurance across functional, security, performance, accessibility
+
+capabilities:
+  - id: test_scaffolding
+    inputs: [acceptance_criteria]
+    outputs: [failing_test_suite]
+
+  - id: security_audit
+    inputs: [codebase]
+    outputs: [owasp_report, vulnerability_list]
+
+  - id: performance_testing
+    inputs: [baseline_metrics, current_build]
+    outputs: [regression_report]
+
+  - id: code_review
+    inputs: [diff, specification]
+    outputs: [review_findings, approval_status]
+
+constraints:
+  - "Must NOT write implementation code"
+  - "Must NOT approve code failing quality gates"
+
+dependencies:
+  tools: [filesystem, snyk, chrome_devtools]
+  agents: [pm-agent]
+  resources: [".agent/.shared/api-contracts/"]
+
+resource_estimates:
+  typical_task_tokens: 20000
+  max_context_needed: 50000

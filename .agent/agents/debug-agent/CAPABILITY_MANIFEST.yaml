@@ -1,0 +1,33 @@
+# Debug Agent — Capability Manifest
+
+name: debug-agent
+version: "1.0"
+description: Root cause analysis and systematic debugging
+
+capabilities:
+  - id: bug_investigation
+    inputs: [bug_report, logs, stack_trace]
+    outputs: [root_cause_analysis, fix, regression_test]
+
+  - id: log_analysis
+    inputs: [log_files, correlation_id]
+    outputs: [event_correlation, anomaly_report]
+
+  - id: performance_diagnosis
+    inputs: [performance_metrics, baseline]
+    outputs: [bottleneck_analysis, optimization_recommendations]
+
+constraints:
+  - "Must follow structured diagnostic protocol"
+  - "Must stop after 3 failed fix attempts"
+  - "Must generate regression test for every fix"
+  - "Must update lessons-learned.md"
+
+dependencies:
+  tools: [filesystem, terminal, git]
+  agents: []
+  resources: [".agent/.shared/lessons-learned.md"]
+
+resource_estimates:
+  typical_task_tokens: 30000
+  max_context_needed: 80000

@@ -1,0 +1,68 @@
+# Plan Workflow (GSD-Enhanced)
+# Structured planning with Chain-of-Thought reasoning + XML task output
+
+name: plan
+description: "Generate atomic XML-structured task plans with research and verification"
+
+steps:
+  - name: gather_context
+    actions:
+      - read .context/tech_stack.md
+      - read .context/coding_standards.md
+      - read .planning/PROJECT.md
+      - read .planning/ROADMAP.md
+      - read .planning/STATE.md
+      - read relevant {phase}-CONTEXT.md (if discuss phase ran)
+      - inspect relevant codebase files
+
+  - name: research
+    agent: architect-agent
+    condition: "brownfield project or complex feature"
+    actions:
+      - "Map relevant codebase areas"
+      - "Identify existing patterns to follow"
+      - "Flag potential conflicts"
+    output: "{phase}-RESEARCH.md"
+
+  - name: analyze_requirements
+    reasoning: chain_of_thought
+    outputs: [requirements_summary, open_questions]
+    tags: [VERIFIED, INFERRED, UNCERTAIN]
+
+  - name: generate_plans
+    description: "Create 2-3 atomic XML task plans — each small enough for a fresh context window"
+    format: xml_task
+    constraints:
+      - "Each plan must be completable within ~200K tokens of context"
+      - "Each plan must be independently executable"
+      - "Each plan must include <verify> criteria"
+      - "Parallel plans must not have dependencies on each other"
+    output: "{phase}-{N}-PLAN.md"
+
+  - name: verify_plans
+    agent: qa-agent
+    actions:
+      - "Check plans against requirements — loop until pass"
+      - "Verify no missing dependencies between plans"
+      - "Ensure verification criteria are testable"
+    output: "plan_verification_report"
+
+  - name: present_for_review
+    gate: human_approval
+    artifacts:
+      - .planning/STATE.md (updated)
+      - "{phase}-{N}-PLAN.md"
+
+# XML Task Format Reference:
+#
+# <task type="auto|manual">
+#   <name>Short descriptive name</name>
+#   <files>src/path/to/file.ts, src/path/to/other.ts</files>
+#   <depends_on>task-id (optional)</depends_on>
+#   <action>
+#     Precise implementation instructions.
+#     Include library choices, patterns to follow, edge cases.
+#   </action>
+#   <verify>Exact command or check to confirm task completion</verify>
+#   <done>Definition of done — what state looks like when complete</done>
+# </task>

@@ -1,0 +1,24 @@
+# Skill Selection
+# Controls which skills are active. Start with essentials, expand as needed.
+
+mode: essentials-only  # Options: essentials-only | team-standard | full
+
+active_skills:
+  - git_manager
+  - code_review_enforcer
+  - test_driven_development
+  - docs_updater
+  - dependency_manager
+
+# Activate these as the project matures:
+# deferred_skills:
+#   - database_schema_manager
+#   - api_contract_validator
+#   - deployment_orchestrator
+#   - observability_configurator
+#   - security_hardening
+
+suppressed_features:
+  - parallel_agent_execution   # Sequential for predictability
+  - advanced_mcp_servers       # Local filesystem only initially
+  - auto_deployment            # Manual deployment only initially

@@ -1,0 +1,32 @@
+# Frontend Agent — Capability Manifest
+
+name: frontend-agent
+version: "1.0"
+description: Frontend specialist for React/Next.js/TypeScript/Tailwind
+
+capabilities:
+  - id: component_development
+    inputs: [design_spec, api_contract]
+    outputs: [react_components, unit_tests]
+
+  - id: visual_verification
+    inputs: [rendered_page]
+    outputs: [screenshot, accessibility_report, lighthouse_score]
+
+  - id: design_system_integration
+    inputs: [design_tokens]
+    outputs: [themed_components]
+
+constraints:
+  - "Must NOT modify backend code"
+  - "Must NOT modify database schemas"
+  - "Must use functional components with hooks"
+
+dependencies:
+  tools: [filesystem, chrome_devtools]
+  agents: [pm-agent]
+  resources: [".agent/.shared/design-system/", ".context/coding_standards.md"]
+
+resource_estimates:
+  typical_task_tokens: 20000
+  max_context_needed: 40000

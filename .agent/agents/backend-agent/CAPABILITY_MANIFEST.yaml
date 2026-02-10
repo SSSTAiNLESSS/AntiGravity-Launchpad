@@ -1,0 +1,32 @@
+# Backend Agent — Capability Manifest
+
+name: backend-agent
+version: "1.0"
+description: Backend specialist for FastAPI/PostgreSQL/JWT
+
+capabilities:
+  - id: api_implementation
+    inputs: [api_contract, database_schema]
+    outputs: [fastapi_routes, pydantic_models, tests]
+
+  - id: database_management
+    inputs: [schema_requirements]
+    outputs: [migrations, models, indexes]
+
+  - id: auth_implementation
+    inputs: [auth_requirements]
+    outputs: [jwt_middleware, rbac_config]
+
+constraints:
+  - "Must NOT modify frontend code"
+  - "Must validate all inputs with Pydantic"
+  - "Must write tests before implementation"
+
+dependencies:
+  tools: [filesystem, postgresql, supabase]
+  agents: [pm-agent]
+  resources: [".agent/.shared/api-contracts/", ".agent/.shared/database-patterns/"]
+
+resource_estimates:
+  typical_task_tokens: 25000
+  max_context_needed: 60000

@@ -1,0 +1,28 @@
+# Review Workflow
+# Multi-agent code review pipeline
+
+name: review
+description: "Automated code review with multiple quality dimensions"
+
+reviewers:
+  - agent: qa-agent
+    focus: [correctness, test_coverage, edge_cases]
+
+  - skill: code_review_enforcer
+    focus: [style, complexity, lint_errors]
+
+  - skill: security_hardening
+    focus: [secrets, injection, auth_bypass]
+
+  - skill: api_contract_validator
+    focus: [contract_compliance, breaking_changes]
+
+output:
+  format: unified_report
+  sections: [findings, severity, recommendations, approval_status]
+  
+escalation:
+  critical_findings: block_merge
+  high_findings: require_response
+  medium_findings: advisory
+  low_findings: informational

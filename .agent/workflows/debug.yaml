@@ -1,0 +1,35 @@
+# Debug Workflow
+# Incident response and root cause analysis
+
+name: debug
+description: "Structured debugging with 3-Strike Rule enforcement"
+
+protocol:
+  - name: characterize
+    actions:
+      - "Capture exact error message and stack trace"
+      - "Document observed vs expected behavior"
+      - "Identify reproduction steps"
+
+  - name: hypothesize
+    actions:
+      - "Generate 3-5 ranked hypotheses"
+      - "Identify evidence needed to verify each"
+
+  - name: investigate
+    actions:
+      - "Collect evidence (logs, git bisect, code inspection)"
+      - "Systematically verify or eliminate hypotheses"
+    max_attempts: 3
+    on_max_attempts: escalate
+
+  - name: fix
+    actions:
+      - "Apply targeted fix"
+      - "Write regression test"
+      - "Verify fix doesn't break existing tests"
+
+  - name: document
+    actions:
+      - "Update .agent/.shared/lessons-learned.md"
+      - "Log root cause analysis"

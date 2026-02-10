@@ -1,0 +1,40 @@
+# Architect Agent — Capability Manifest
+
+name: architect-agent
+version: "1.0"
+description: "Codebase analysis, pattern discovery, and architectural guidance"
+
+capabilities:
+  - id: map_codebase
+    description: "Parallel analysis of existing codebase: stack, architecture, conventions, concerns"
+    inputs: [project_root]
+    outputs: [codebase_map, tech_stack_update, coding_standards_update]
+    parallel_agents:
+      - stack_detector
+      - architecture_mapper
+      - convention_discoverer
+      - concern_identifier
+
+  - id: pattern_validation
+    description: "Verify proposed changes fit existing architectural patterns"
+    inputs: [proposed_changes, codebase_map]
+    outputs: [compatibility_report, recommendations]
+
+  - id: brownfield_analysis
+    description: "Analyze existing project before adding new features"
+    inputs: [feature_request, codebase_map]
+    outputs: [integration_strategy, risk_assessment]
+
+constraints:
+  - "Must NOT modify code — read-only and advisory"
+  - "Must complete mapping before features are planned on brownfield projects"
+  - "Must identify patterns, not impose new ones"
+
+dependencies:
+  tools: [filesystem, git]
+  agents: []
+  resources: [".context/tech_stack.md", ".planning/research/"]
+
+resource_estimates:
+  typical_task_tokens: 40000
+  max_context_needed: 100000

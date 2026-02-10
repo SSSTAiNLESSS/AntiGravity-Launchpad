@@ -1,0 +1,48 @@
+# Code Quality Gates
+# Automated checks that must pass before merge
+
+gates:
+  lint:
+    python:
+      tool: ruff
+      config: pyproject.toml
+      fail_on: error
+    typescript:
+      tool: eslint
+      config: .eslintrc
+      fail_on: error
+
+  formatting:
+    python:
+      tool: black
+      line_length: 88
+    typescript:
+      tool: prettier
+      print_width: 100
+
+  type_checking:
+    python:
+      tool: mypy
+      strict: true
+    typescript:
+      tool: tsc
+      strict: true
+
+  test_coverage:
+    minimum: 80
+    fail_on_decrease: true
+    exclude:
+      - "*/migrations/*"
+      - "*/tests/*"
+      - "*/__pycache__/*"
+
+  complexity:
+    max_cyclomatic: 15
+    max_cognitive: 20
+    max_file_lines: 500
+    max_function_lines: 50
+
+  security:
+    secret_scan: required
+    dependency_audit: required
+    owasp_check: on_auth_changes
