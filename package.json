@@ -1,0 +1,15 @@
+{
+    "name": "antigravity-launchpad",
+    "version": "1.0.0",
+    "description": "AntiGravity Launchpad",
+    "private": true,
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "oh-my-ag": "^1.15.0"
+    }
+}

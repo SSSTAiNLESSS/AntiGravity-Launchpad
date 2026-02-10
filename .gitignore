@@ -28,3 +28,6 @@ build/
 
 # Project internal (not part of template)
 .project/
+
+# Session State (Ephemeral)
+.serena/active_plan.md

@@ -59,27 +59,29 @@ Most AI coding assistants are **reactive** — you ask, they generate, you debug
 ## 🏗 Architecture
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                    YOUR IDE (VSCode)                          │
-│                    "Command Center"                           │
-├──────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────┐  ┌──────────┐  ┌───────────┐  ┌──────────┐   │
-│  │ .context/ │  │.planning/│  │  .serena/  │  │ .agent/  │   │
-│  │ Grounding │  │Lifecycle │  │  Session   │  │  Brain   │   │
-│  └──────────┘  └──────────┘  └───────────┘  └──────────┘   │
-│       │          │  PROJECT    │  active      │              │
-│       │          │  ROADMAP    │  task-board   │  7 Agents   │
-│       │          │  STATE      │  ADRs         │  11 Skills  │
-│       │          └─────┬──────┘               │  7 Flows    │
-│       │                │                       └─────┬──────┘│
-│       └────────────────┴─────────────────────────────┘      │
-│                              │                               │
-│                    ┌─────────┴─────────┐                    │
-│                    │    MCP Servers    │                     │
-│                    │ (9 integrations)  │                     │
-│                    └───────────────────┘                    │
-└──────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│                       YOUR IDE (VSCode)                        │
+│                       "Command Center"                         │
+├────────────────────────────────────────────────────────────────┤
+│                                                                │
+│   ┌───────────┐   ┌───────────┐   ┌───────────┐   ┌───────────┐│
+│   │ .context/ │   │ .planning/│   │  .serena/ │   │  .agent/  ││
+│   │ Grounding │   │ Lifecycle │   │  Session  │   │   Brain   ││
+│   └───────────┘   └───────────┘   └───────────┘   └───────────┘│
+│         │               │               │               │      │
+│         │            PROJECT          active         7 Agents  │
+│         │            ROADMAP        task-board      11 Skills  │
+│         │             STATE            ADRs          7 Flows   │
+│         │               │               │               │      │
+│         └───────────────┼───────────────┼───────────────┘      │
+│                         │               │                      │
+│                         └───────┬───────┘                      │
+│                                 │                              │
+│                      ┌──────────┴──────────┐                   │
+│                      │     MCP Servers     │                   │
+│                      │  (9 integrations)   │                   │
+│                      └─────────────────────┘                   │
+└────────────────────────────────────────────────────────────────┘
 ```
 
 **Four pillars:**
@@ -190,6 +192,10 @@ npx oh-my-ag doctor
 
 ### First Steps After Setup
 
+> [!NOTE]
+> If you run `oh-my-ag doctor`, you may see warnings about **Global MCP Config** being "Not configured". This is expected as this project uses a self-contained **Local Configuration** in `.agent/mcp.json`. You can safely ignore these warnings.
+
+
 1. **Edit `.context/tech_stack.md`** — Replace the defaults with your actual technology choices
 2. **Edit `.context/coding_standards.md`** — Set your team's conventions
 3. **Review `.agent/config/skill-selection.yaml`** — Start with `essentials-only` mode
@@ -285,6 +291,7 @@ Each agent has:
 ## ⚡ The Eleven Skills
 
 Skills are modular capabilities loaded on demand via lightweight `SKILL.md` routers (~1KB each).
+*(Note: The `skills/` directory may contain additional internal or meta-skills like `commit` and `orchestrator` beyond the core list below.)*
 
 | Skill | Triggers | What It Provides |
 |-------|----------|-----------------|
@@ -339,7 +346,7 @@ Nine Model Context Protocol servers enable agents to interact with external tool
 | **Short-term** (Serena) | `.serena/` markdown files | Current session | "Frontend is waiting for Backend API" |
 | **Long-term** (OpenMemory) | Vector/graph database via MCP | Cross-project, permanent | "User prefers dark mode" → remembered in next project |
 
-Configure in `.agent/config/mcp_servers.json`. All secrets reference environment variables (`${VAR_NAME}`).
+Configure in `.agent/config/config.yaml` (pointing to `.agent/mcp.json`). All secrets reference environment variables (`${VAR_NAME}`).
 
 ---
 

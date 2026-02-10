@@ -1,0 +1,9 @@
+# Agent Configuration
+#
+# Primary configuration for oh-my-ag execution
+
+# Path to Serena memory directory (relative to project root)
+serena_path: .serena
+
+# Path to MCP configuration
+mcp_config: .agent/mcp.json
